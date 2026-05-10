@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     [Header("Movimento")]
-    [SerializeField] private float speed = 5f;
+    [SerializeField] private float speed = 6f;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer map;
@@ -15,8 +17,12 @@ public class Player : MonoBehaviour
     public float xPosLastFrame;
 
     [Header("Vida")]
-    public int maxHealth = 5;
+    public int maxHealth = 150;
     private int currentHealth;
+
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI vidaTexto;
+    [SerializeField] private TextMeshProUGUI tintaTexto;
 
     [Header("Ataque")]
     public Transform attackPoint;
@@ -30,7 +36,42 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        currentHealth = maxHealth;
+
+        // =========================
+        // CARREGAR VIDA E TINTA
+        // =========================
+
+        currentHealth = PlayerPrefs.GetInt(
+            "PlayerHealth",
+            maxHealth
+        );
+
+        tinta = PlayerPrefs.GetInt(
+            "PlayerTinta",
+            0
+        );
+
+        AtualizarUIVida();
+        AtualizarUITinta();
+
+        // =========================
+        // POSIÇÃO SALVA
+        // =========================
+
+        // só restaura posição se veio da cena de diálogo
+        if (PlayerPrefs.GetInt("RetornarPosicao", 0) == 1)
+        {
+            if (PlayerPrefs.HasKey("PlayerX"))
+            {
+                float x = PlayerPrefs.GetFloat("PlayerX");
+                float y = PlayerPrefs.GetFloat("PlayerY");
+
+                transform.position = new Vector2(x, y);
+            }
+
+            // desativa após usar
+            PlayerPrefs.SetInt("RetornarPosicao", 0);
+        }
     }
 
     void Update()
@@ -128,6 +169,7 @@ public class Player : MonoBehaviour
         foreach (Collider2D enemy in hitEnemies)
         {
             enemy.GetComponent<Ogro>()?.TomarDano(attackDamage);
+            enemy.GetComponent<Raposa>()?.TomarDano(attackDamage);
         }
     }
 
@@ -144,7 +186,19 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        Debug.Log("Player levou dano. Vida atual: " + currentHealth);
+
+        // salva vida
+        PlayerPrefs.SetInt(
+            "PlayerHealth",
+            currentHealth
+        );
+
+        AtualizarUIVida();
+
+        Debug.Log(
+            "Player levou dano. Vida atual: "
+            + currentHealth
+        );
 
         if (currentHealth <= 0)
         {
@@ -152,30 +206,87 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Die()
+    private void AtualizarUIVida()
     {
-        Debug.Log("Player morreu");
-        Destroy(gameObject);
+        if (vidaTexto != null)
+        {
+            vidaTexto.text =
+                "Vida: " + currentHealth;
+        }
     }
 
     // =========================
-    // COLETA (TintaNarrativa)
+    // MORTE
+    // =========================
+
+    private void Die()
+    {
+        Debug.Log("Player morreu");
+
+        // reseta vida
+        PlayerPrefs.SetInt(
+            "PlayerHealth",
+            maxHealth
+        );
+
+        // reseta tinta
+        PlayerPrefs.SetInt(
+            "PlayerTinta",
+            0
+        );
+
+        // limpa posição salva
+        PlayerPrefs.DeleteKey("PlayerX");
+        PlayerPrefs.DeleteKey("PlayerY");
+
+        PlayerPrefs.SetInt(
+            "RetornarPosicao",
+            0
+        );
+
+        // volta ao menu
+        SceneManager.LoadScene("Menu");
+    }
+
+    // =========================
+    // COLETA
     // =========================
 
     public void Coletar(int valor)
     {
         tinta += valor;
-        Debug.Log("Tinta: " + tinta);
+
+        // salva tinta
+        PlayerPrefs.SetInt(
+            "PlayerTinta",
+            tinta
+        );
+
+        AtualizarUITinta();
+
+        Debug.Log("Tinta Narrativa: " + tinta);
+    }
+
+    private void AtualizarUITinta()
+    {
+        if (tintaTexto != null)
+        {
+            tintaTexto.text =
+                "Tinta Narrativa: " + tinta;
+        }
     }
 
     // =========================
-    // GIZMOS (DEBUG)
+    // DEBUG
     // =========================
 
     void OnDrawGizmosSelected()
     {
         if (attackPoint == null) return;
 
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        Gizmos.DrawWireSphere(
+            attackPoint.position,
+            attackRange
+        );
     }
 }

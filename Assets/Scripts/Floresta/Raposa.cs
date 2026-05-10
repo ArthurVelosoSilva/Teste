@@ -1,23 +1,23 @@
 using UnityEngine;
 
-public class Ogro : MonoBehaviour
+public class Raposa : MonoBehaviour
 {
     [Header("Movimento")]
     public float velocidade = 2f;
     public float distanciaDePerseguicao = 5f;
 
     [Header("Ataque")]
-    public float distanciaDeAtaque = 3f;
+    public float distanciaDeAtaque = 1.2f;
     public float tempoEntreAtaques = 2f;
-    public int dano = 2;
+    public int dano = 1;
 
     [Header("Vida")]
-    public int vidaMaxima = 10;
+    public int vidaMaxima = 5;
     private int vidaAtual;
 
     [Header("Drop")]
     public GameObject itemDrop;
-
+    
     [Range(0f, 1f)]
     public float chanceDrop = 1f;
 
@@ -130,7 +130,7 @@ public class Ogro : MonoBehaviour
     {
         vidaAtual -= danoRecebido;
 
-        Debug.Log("Ogro tomou dano! Vida: " + vidaAtual);
+        Debug.Log("Raposa tomou dano! Vida: " + vidaAtual);
 
         if (vidaAtual <= 0)
         {
