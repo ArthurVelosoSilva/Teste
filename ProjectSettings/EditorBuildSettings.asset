@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: a54bc844cfde9fa46a23a159aadfdb45
+  - enabled: 1
+    path: Assets/Scenes/Vilarejo.unity
+    guid: 9a93bbfabe9654e4ca7a9bb41af6d775
+  - enabled: 1
+    path: Assets/Scenes/Dialogo Mago.unity
+    guid: 42ab2a878bc7c1248b076aa13ce4cef2
+  - enabled: 1
+    path: Assets/Scenes/Floresta.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Castelo.unity
+    guid: 7745c8f622738674fbcf29ec7fc21555
+  - enabled: 1
+    path: Assets/Scenes/Dragao (Batalha).unity
+    guid: 834a7c8e507ee6c48b5f4e2bad17b24f
+  - enabled: 1
+    path: Assets/Scenes/Caverna1.unity
+    guid: 96b1801735dfcf24db4d5496a4126b4e
+  - enabled: 1
+    path: Assets/Scenes/Caverna2.unity
+    guid: da93c7b9fb1000b4cbe11c389c301095
+  - enabled: 1
+    path: Assets/Scenes/Caverna3.unity
+    guid: c50dc8e433d5c0c4aa18848f65e0bb5d
+  - enabled: 1
+    path: Assets/Scenes/Final.unity
+    guid: 0c35585f3c6bd1b409b87173d641e891
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: a1a718c36c32c9a48ac8682b4e5f7c70
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
